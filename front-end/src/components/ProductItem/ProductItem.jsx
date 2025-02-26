@@ -1,35 +1,47 @@
 import { useState } from "react";
-import { AiOutlineHeart, AiFillHeart } from "react-icons/ai"; // Import Wishlist Icons
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { useCart } from "../../contexts/CartContext"; // Import Cart Context
 
 const ProductItem = () => {
-  const [quantity, setQuantity] = useState(0);
-  const [isWishlisted, setIsWishlisted] = useState(false); // State for Wishlist
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { cartItems, addToCart, removeFromCart, updateCartQuantity } = useCart();
+
+  const product = {
+    id: 1,
+    name: "Sofa Leg",
+    price: 9999,
+    image: "/src/assets/sofa-legs/auroraBlock3/auroraBlock3-2.JPG",
+    description: "High-quality sofa leg with durable material and premium finish.",
+  };
+
+  const cartItem = cartItems.find((item) => item.id === product.id);
+  const quantity = cartItem ? cartItem.quantity : 0;
 
   const handleAddToCart = () => {
-    setQuantity(1);
+    addToCart(product);
   };
 
   const handleIncrease = () => {
-    setQuantity((prev) => prev + 1);
+    updateCartQuantity(product.id, quantity + 1);
   };
 
   const handleDecrease = () => {
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 0));
+    if (quantity > 1) {
+      updateCartQuantity(product.id, quantity - 1);
+    } else {
+      removeFromCart(product.id);
+    }
   };
 
   const toggleWishlist = () => {
-    setIsWishlisted(!isWishlisted); // Toggle Wishlist
+    setIsWishlisted(!isWishlisted);
   };
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row">
       {/* Left Side: Product Image */}
       <div className="md:w-1/2">
-        <img
-          src="/src/assets/sofa-legs/auroraBlock3/auroraBlock3-2.JPG"
-          alt="sofa leg"
-          className="w-full h-full object-cover"
-        />
+        <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
       </div>
 
       {/* Right Side: Product Details */}
@@ -39,22 +51,18 @@ const ProductItem = () => {
           {Array(5)
             .fill("★")
             .map((star, index) => (
-              <span key={index} className="text-yellow-500 text-lg">
-                {star}
-              </span>
+              <span key={index} className="text-yellow-500 text-lg">{star}</span>
             ))}
         </div>
 
         {/* Product Name */}
-        <h2 className="text-lg font-bold mb-1">Sofa Leg</h2>
+        <h2 className="text-lg font-bold mb-1">{product.name}</h2>
 
         {/* Product Price */}
-        <p className="text-md text-black font-bold mb-2">₹9999</p>
+        <p className="text-md text-black font-bold mb-2">₹{product.price}</p>
 
         {/* Description */}
-        <p className="text-gray-600 text-sm mb-3">
-          High-quality sofa leg with durable material and premium finish.
-        </p>
+        <p className="text-gray-600 text-sm mb-3">{product.description}</p>
 
         {/* Cart Controls */}
         {quantity === 0 ? (

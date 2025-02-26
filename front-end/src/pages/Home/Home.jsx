@@ -1,14 +1,16 @@
-import NavBar from '../../components/NavBar/NavBar'
+import NavBar from '../../components/Navbar/NavBar'
 import ExploreMenu from '../../components/ExploreMenu/ExploreMenu'
 import FilterComponent from '../../components/Filter/Filter'
 import ProductGrid from '../../components/ProductList/ProductList'
 import Footer from '../../components/Footer/Footer'
+
 
 import '../../index.css';
 
 const Home = () => {
     return (
         <>
+        
           <NavBar />
           <ExploreMenu />
     
@@ -24,6 +26,7 @@ const Home = () => {
           </div>
     
           <Footer />
+          
         </>
       
       )
