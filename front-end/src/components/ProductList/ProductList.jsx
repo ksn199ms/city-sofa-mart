@@ -1,27 +1,24 @@
 import ProductItem from '../ProductItem/ProductItem';
 import ProductMore from '../UI/Buttons/ProductMore/ProductMore';
+import { sofaLegsList } from '../../assets/asset';
 
 const ProductList = () => {
   return (
-    <div className="container mx-auto p-4 ">
-      {/* Grid Layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-      </div>
-
-      <ProductMore />
-
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sofaLegsList.map((product) => (
+        <ProductItem
+          key={product._id}
+          id={product._id}
+          name={product.name}
+          price={product.price}
+          description={product.description}
+          images={product.images}
+        />
+      ))}
     </div>
   );
 };
+
 
 export default ProductList;
 

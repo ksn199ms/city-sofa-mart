@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaShoppingCart, FaHeart, FaStar } from "react-icons/fa";
 import Navbar from "../../components/Navbar/NavBar";
 import { sofaLegsList } from "../../assets/asset.js";
+import Footer from "../../components/Footer/Footer.jsx";
 
 export default function ProductPage() {
   const [selectedSize, setSelectedSize] = useState("5 Inch");
@@ -143,6 +144,7 @@ export default function ProductPage() {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
