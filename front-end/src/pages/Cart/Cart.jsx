@@ -1,8 +1,14 @@
 import { FaTrash } from "react-icons/fa";
 import Navbar from "../../components/Navbar/NavBar";
-import { sofaLegsList } from "../../assets/asset.js";
+import { useCart } from "../../contexts/cartContext";
 
 const Cart = () => {
+  const { cartItems, removeFromCart, updateCartQuantity } = useCart();
+  const cartArray = Object.values(cartItems); // Convert cart object to array
+
+  // Calculate total price
+  const totalPrice = cartArray.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
   return (
     <div>
       <Navbar />
@@ -19,26 +25,31 @@ const Cart = () => {
               <span>Subtotal</span>
               <span>Action</span>
             </div>
-            <div className="grid grid-cols-5 items-center p-4 border-b text-center">
-              <div className="flex items-center space-x-4">
-                <img
-                  src={sofaLegsList[6].images[0]}
-                  alt="Sofa Leg"
-                  className="w-16 h-16 object-cover rounded-lg bg-yellow-100"
-                />
-                <span className="text-gray-600 ">Sofa Leg</span>
-              </div>
-              <span className="text-gray-400">Rs. 9999.00</span>
-              <input
-                type="number"
-                className="w-12 mx-auto border text-center rounded"
-                defaultValue={1}
-              />
-              <span className="font-semibold">Rs. 9999.00</span>
-              <button className="text-yellow-600 hover:text-yellow-800 ml-15">
-                <FaTrash size={18} />
-              </button>
-            </div>
+
+            {cartArray.length > 0 ? (
+              cartArray.map((item) => (
+                <div key={item.id} className="grid grid-cols-5 items-center p-4 border-b text-center">
+                  <div className="flex items-center space-x-4">
+                    <img src={item.images[0]} alt={item.name} className="w-16 h-16 object-cover rounded-lg bg-yellow-100" />
+                    <span className="text-gray-600">{item.name}</span>
+                  </div>
+                  <span className="text-gray-400">₹{item.price}</span>
+                  <input
+                    type="number"
+                    className="w-12 mx-auto border text-center rounded"
+                    value={item.quantity}
+                    min={1}
+                    onChange={(e) => updateCartQuantity(item.id, parseInt(e.target.value))}
+                  />
+                  <span className="font-semibold">₹{item.price * item.quantity}</span>
+                  <button className="text-yellow-600 hover:text-yellow-800 ml-15" onClick={() => removeFromCart(item.id)}>
+                    <FaTrash size={18} />
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-500 mt-4">Your cart is empty</p>
+            )}
           </div>
 
           {/* Cart Totals */}
@@ -46,11 +57,11 @@ const Cart = () => {
             <h2 className="text-xl font-bold">Cart Totals</h2>
             <div className="flex justify-between text-gray-500 mt-3">
               <span>Subtotal</span>
-              <span>Rs. 9999.00</span>
+              <span>₹{totalPrice.toFixed(2)}</span>
             </div>
             <div className="flex justify-between font-semibold text-lg mt-2">
               <span>Total</span>
-              <span className="text-yellow-600">Rs. 9999.00</span>
+              <span className="text-yellow-600">₹{totalPrice.toFixed(2)}</span>
             </div>
             <button className="mt-6 w-full border border-black py-2 rounded-lg hover:bg-black hover:text-white transition">
               Check Out

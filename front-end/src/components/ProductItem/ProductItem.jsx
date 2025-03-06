@@ -10,7 +10,7 @@ const ProductItem = ({ id, name, price, description, images }) => {
   const quantity = cartItem ? cartItem.quantity : 0;
 
   const handleAddToCart = () => {
-    addToCart({ id, name, price });
+    addToCart({ id, name, price, description , images });
   };
 
   const handleIncrease = () => {
