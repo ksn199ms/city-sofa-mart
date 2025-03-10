@@ -1,6 +1,7 @@
 import { FaTrash } from "react-icons/fa";
 import Navbar from "../../components/Navbar/NavBar";
 import { useCart } from "../../contexts/cartContext";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateCartQuantity } = useCart();
@@ -8,6 +9,8 @@ const Cart = () => {
 
   // Calculate total price
   const totalPrice = cartArray.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  let navigate = useNavigate();
 
   return (
     <div>
@@ -63,7 +66,7 @@ const Cart = () => {
               <span>Total</span>
               <span className="text-yellow-600">₹{totalPrice.toFixed(2)}</span>
             </div>
-            <button className="mt-6 w-full border border-black py-2 rounded-lg hover:bg-black hover:text-white transition">
+            <button className="mt-6 w-full border border-black py-2 rounded-lg hover:bg-black hover:text-white transition" onClick={() => navigate("/checkout")}>
               Check Out
             </button>
           </div>
