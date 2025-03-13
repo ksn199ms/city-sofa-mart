@@ -31,7 +31,7 @@ const Cart = () => {
               cartArray.map((item) => (
                 <div key={item.id} className="grid grid-cols-5 items-center p-4 border-b text-center">
                   <div className="flex items-center space-x-4">
-                    <img src={item.images[0]} alt={item.name} className="w-16 h-16 object-cover rounded-lg bg-yellow-100" />
+                    <img src={item.images[1]} alt={item.name} className="w-16 h-16 object-cover rounded-lg bg-yellow-100" />
                     <span className="text-gray-600">{item.name}</span>
                   </div>
                   <span className="text-gray-400">₹{item.price}</span>
