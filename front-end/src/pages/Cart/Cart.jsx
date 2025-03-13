@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FaTrash, FaPlus, FaMinus } from "react-icons/fa";
 import Navbar from "../../components/Navbar/NavBar";
 import { useCart } from "../../contexts/cartContext";
@@ -8,8 +9,23 @@ const Cart = () => {
   const cartArray = Object.values(cartItems);
 
   const totalPrice = cartArray.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const totalQuantity = cartArray.reduce((acc, item) => acc + item.quantity, 0);
 
   let navigate = useNavigate();
+
+  const [couponCode, setCouponCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [error, setError] = useState("");
+
+  const handleApplyCoupon = () => {
+    if (couponCode === "FLAT100") {
+      setDiscount(100);
+      setError("");
+    } else {
+      setDiscount(0);
+      setError("Invalid Coupon Code");
+    }
+  };
 
   return (
     <div>
@@ -61,11 +77,39 @@ const Cart = () => {
               <span>Subtotal</span>
               <span>₹{totalPrice.toFixed(2)}</span>
             </div>
+
+            {discount > 0 && (
+              <div className="flex justify-between text-green-500 font-semibold mt-2">
+                <span>Discount (FLAT100)</span>
+                <span>-₹{discount}</span>
+              </div>
+            )}
+
             <div className="flex justify-between font-semibold text-lg mt-2">
               <span>Total</span>
-              <span className="text-yellow-600">₹{totalPrice.toFixed(2)}</span>
+              <span className="text-yellow-600">₹{(totalPrice - discount).toFixed(2)}</span>
             </div>
-            <button className="mt-6 w-full border border-black py-2 rounded-lg hover:bg-black hover:text-white transition" onClick={() => navigate("/checkout")}>Check Out</button>
+
+            <div className="mt-4 flex items-center space-x-2">
+              <input
+                type="text"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                placeholder="Enter Coupon Code"
+                className={`w-full p-2 border rounded-lg focus:outline-none ${error ? "border-red-500" : "border-gray-300"}`}
+              />
+              <button onClick={handleApplyCoupon} className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition">
+                Apply
+              </button>
+            </div>
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+
+            <button
+              className="mt-6 w-full border border-black py-2 rounded-lg hover:bg-black hover:text-white transition"
+              onClick={() => navigate("/checkout", { state: { discount } })}
+            >
+              Check Out
+            </button>
           </div>
         </div>
       </div>

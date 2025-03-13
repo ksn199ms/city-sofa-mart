@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 import Navbar from "../../components/Navbar/NavBar";
 import Footer from "../../components/Footer/Footer";
 import { useCart } from "../../contexts/cartContext";
 
 const CheckoutPage = () => {
+  const location = useLocation();
+  const discountFromCart = location.state?.discount || 0; // Get discount from Cart page, default to 0
+
   const [gstin, setGstin] = useState("");
   const [isValidGSTIN, setIsValidGSTIN] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isCouponApplied, setIsCouponApplied] = useState(discountFromCart > 0); // Check if coupon is applied
 
   const { cartItems } = useCart();
   const cartArray = Object.values(cartItems);
@@ -17,6 +22,9 @@ const CheckoutPage = () => {
 
   // Calculate tax as 18% of total price
   const taxAmount = totalPrice * 0.18;
+
+  // Use the discount from Cart page
+  const discountAmount = isCouponApplied ? discountFromCart : 0;
 
   const validateGSTIN = (input) => {
     const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
@@ -68,12 +76,18 @@ const CheckoutPage = () => {
                   <div className="flex justify-between"><span>Shipping Charges</span><span>₹90</span></div>
                   <div className="flex justify-between"><span>Handling Charge</span><span>₹10</span></div>
                   <div className="flex justify-between"><span>Tax (18%)</span><span>₹{taxAmount.toFixed(2)}</span></div>
+                  {isCouponApplied && (
+                    <div className="flex justify-between text-green-600 font-semibold">
+                      <span>Discount</span>
+                      <span>-₹{discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
                 </div>
               )}
               <hr className="my-3 border-gray-300" />
               <div className="flex justify-between text-xl font-bold">
                 <span>Total</span>
-                <span>₹{(totalPrice + 90 + 10 + taxAmount).toFixed(2)}</span>
+                <span>₹{(totalPrice + 90 + 10 + taxAmount - discountAmount).toFixed(2)}</span>
               </div>
             </div>
 
