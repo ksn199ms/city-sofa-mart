@@ -91,9 +91,9 @@ const Navbar = () => {
 
         <div className="hidden md:flex items-center gap-x-6">
           <Link to={'/'} className="text-gray-500 hover:text-yellow-500">Home</Link>
-          <a href="#" className="text-gray-500 hover:text-yellow-500">Privacy&Policy</a>
-          <a href="#" className="text-gray-500 hover:text-yellow-500">About Us</a>
-          <a href="#" className="text-gray-500 hover:text-yellow-500">Contact Us</a>
+          <Link to={'/myorders'} className="text-gray-500 hover:text-yellow-500">My Orders</Link>
+          <Link to={'/about'} className="text-gray-500 hover:text-yellow-500">About Us</Link>
+          <Link to={'/contact'} className="text-gray-500 hover:text-yellow-500">Contact Us</Link>
           <div className="relative">
             <Link to={'/cart'}><FiShoppingCart className="text-gray-500 hover:text-yellow-500 text-xl cursor-pointer" /></Link>
             {getCartCount() > 0 && (

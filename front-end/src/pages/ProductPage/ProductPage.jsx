@@ -1,19 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { FaShoppingCart, FaHeart, FaStar } from "react-icons/fa";
 import Navbar from "../../components/Navbar/NavBar";
 import { sofaLegsList } from "../../assets/asset.js";
 import Footer from "../../components/Footer/Footer.jsx";
 
 export default function ProductPage() {
+  const { productId } = useParams(); // Get product ID from URL
+  const [product, setProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState("5 Inch");
   const [quantity, setQuantity] = useState(0);
-  const [mainImage, setMainImage] = useState(sofaLegsList[6].images[0]);
+  const [mainImage, setMainImage] = useState(null);
   const [activeTab, setActiveTab] = useState("description");
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState("");
   const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    if (!productId) return;
+    
+    const foundProduct = sofaLegsList.find((item) => item._id.toString() === productId);
+    console.log("Found Product:", foundProduct);
+    
+    if (foundProduct) {
+      setProduct(foundProduct);
+      setMainImage(foundProduct.images[0]);
+    }
+  }, [productId]);
   
-  const sizes = ["5 Inch", "8 Inch", "10 Inch"];
 
   const handleReviewSubmit = () => {
     if (newReview.trim() && rating > 0) {
@@ -25,6 +39,10 @@ export default function ProductPage() {
 
   const averageRating = reviews.length > 0 ? Math.round(reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length) : 0;
 
+  if (!product) {
+    return <p className="text-center mt-20">Loading Product...</p>;
+  }
+
   return (
     <div>
       <Navbar />
@@ -32,7 +50,7 @@ export default function ProductPage() {
         <div className="grid md:grid-cols-2 gap-8">
           <div className="flex">
             <div className="flex flex-col space-y-4 mt-4 flex-shrink-0">
-              {sofaLegsList[6].images.slice(1, 4).map((img, index) => (
+              {product.images.slice(1, 4).map((img, index) => (
                 <img
                   key={index}
                   src={img}
@@ -43,18 +61,14 @@ export default function ProductPage() {
               ))}
             </div>
             <div className="ml-4">
-              <img
-                src={mainImage}
-                alt="Sofa Leg"
-                className="w-full max-h-[500px] rounded-lg shadow"
-              />
+              <img src={mainImage} alt={product.name} className="w-full max-h-[500px] rounded-lg shadow" />
             </div>
           </div>
 
           <div>
-            <h1 className="text-2xl font-bold">Sofa Leg</h1>
-            <p className="text-xl text-gray-700">Rs. 999</p>
-            <p className="text-sm text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <h1 className="text-2xl font-bold">{product.name}</h1>
+            <p className="text-xl text-gray-700">Rs. {product.price}</p>
+            <p className="text-sm text-gray-500">{product.description}</p>
             <div className="text-sm text-gray-600 mt-2 flex">
               {[...Array(5)].map((_, i) => (
                 <FaStar key={i} className={i < averageRating ? "text-yellow-500" : "text-gray-300"} />
@@ -65,7 +79,7 @@ export default function ProductPage() {
             <div className="mt-4">
               <h3 className="text-lg font-semibold">Size</h3>
               <div className="flex space-x-2 mt-2">
-                {sizes.map((size) => (
+                {product.sizes.map((size) => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
@@ -110,7 +124,7 @@ export default function ProductPage() {
 
         <div className="text-center mt-6">
           {activeTab === "description" && (
-            <p className="text-sm text-gray-500">Lorem ipsum dolor sit amet...</p>
+            <p className="text-sm text-gray-500">{product.fullDescription}</p>
           )}
           {activeTab === "reviews" && (
             <div className="max-w-3xl mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">

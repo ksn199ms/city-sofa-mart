@@ -63,7 +63,7 @@ export const sofaLegsList = [
         subCategory: "Stainless-Steel-leg",
     },
     {
-        _id: "2",
+        _id: 2,
         name: "Aurora Block 3",
         price: 1299,
         description: "Upgrade your sofa with our durable, stylish legs for superior support and lasting stability.",
